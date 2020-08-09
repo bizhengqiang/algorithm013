@@ -1,0 +1,19 @@
+HashMap 简介
+    一句话概括之：HashMap 是一个散列表，它存储的内容是键值对 (key-value) 映射。
+
+    它根据键的 hashCode 值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度，但遍历顺序却是不确定的。
+
+    HashMap 最多只允许一条记录的键为 null，允许多条记录的值为 null。
+
+    HashMap 使用 hash 算法进行数据的存储和查询。
+    内部使用一个 Entry 表示键值对 key-value。
+    用 Entry 的数组保存所有键值对, Entry 通过链表的方式链接后续的节点 (1.8 后会根       据链表长度决定是否转换成一棵树类似 TreeMap 来节省查询时间) Entry 通过计算 key 的 hash 值来决定映射到具体的哪个数组（也叫 Bucket) 中。
+
+HashMap 非线程安全，即任一时刻可以有多个线程同时写 HashMap，可能会导致数据的不一致。如果需要满足线程安全，可以用 Collections 的 synchronizedMap 方法使 HashMap 具有线程安全的能力，或者使用 ConcurrentHashMap。
+
+HashMap 特性
+    Hash 相关的数据结构本质上都是 key value pair
+    Hash 中不能存在 duplicate key
+    HashMap 提供非常快速查找时间复杂度
+    HashMap 具体实现中，null 可以作为 key 或者 value 存在
+    HashMap 不是线程安全
