@@ -1,0 +1,322 @@
+
+代码片段：
+1.两数之和[1]。
+需要用一个map来缓存，一次hash遍历就可以求出：
+class Solution {
+    public int[] twoSum(int[] nums, int target) {
+        int[] returnIndex = new int[2];
+        Map<Integer,Integer> cachMap = new HashMap<Integer,Integer>();
+        for(int i = 0;i<nums.length;++i){
+            if(cachMap.containsKey(nums[i])){
+                returnIndex[0] = i;
+                returnIndex[1] = cachMap.get(nums[i]);
+            }
+            cachMap.put(target-nums[i],i);
+        }
+        return returnIndex;
+        
+    }
+}
+
+2.盛最多水的容器[11]
+ 双指针方法，遍历一次就可以。
+class Solution {
+    public int maxArea(int[] height) {
+        int maxArea=0;
+        int headIndex = 0;
+        int endIndex = height.length-1;
+        while(headIndex<endIndex){
+            int area = 0;
+            if(height[headIndex]<=height[endIndex]){
+                area = height[headIndex]*(endIndex-headIndex);
+                headIndex++;
+            }else{
+                area = height[endIndex]*(endIndex-headIndex);
+                endIndex--;
+            }
+            maxArea = maxArea>=area?maxArea:area;
+        }
+        return maxArea;
+    }
+}
+
+3.复杂度分析：
+
+
+遍历代码片段：
+前序遍历：
+public static void preOrderRecur(TreeNode head) {
+    if (head == null) {
+        return;
+    }
+    System.out.print(head.value + " ");
+    preOrderRecur(head.left);
+    preOrderRecur(head.right);
+}
+
+中序遍历：
+public static void preOrderRecur(TreeNode head) {
+    if (head == null) {
+        return;
+    }
+    preOrderRecur(head.left);
+    System.out.print(head.value + " ");
+    preOrderRecur(head.right);
+}
+
+
+后序遍历：
+public static void postOrderRecur(TreeNode head) {
+    if (head == null) {
+        return;
+    }
+    postOrderRecur(head.left);
+    postOrderRecur(head.right);
+    System.out.print(head.value + " ");
+}
+
+
+
+
+
+
+
+Top K的经典解法：
+（1）堆：
+public int[] getLeastNumbers(int[] arr, int k) {
+    if (k == 0) {
+        return new int[0];
+    }
+    // 使用一个最大堆（大顶堆）
+    // Java 的 PriorityQueue 默认是小顶堆，添加 comparator 参数使其变成最大堆
+    Queue<Integer> heap = new PriorityQueue<>(k, (i1, i2) -> Integer.compare(i2, i1));
+
+    for (int e : arr) {
+        // 当前数字小于堆顶元素才会入堆
+        if (heap.isEmpty() || heap.size() < k || e < heap.peek()) {
+            heap.offer(e);
+        }
+        if (heap.size() > k) {
+            heap.poll(); // 删除堆顶最大元素
+        }
+    }
+    // 将堆中的元素存入数组
+    int[] res = new int[heap.size()];
+    int j = 0;
+    for (int e : heap) {
+        res[j++] = e;
+    }
+    return res;
+}
+
+（2）快速排序：
+public int[] getLeastNumbers(int[] arr, int k) {
+    if (k == 0) {
+        return new int[0];
+    } else if (arr.length <= k) {
+        return arr;
+    }
+    
+    // 原地不断划分数组
+    partitionArray(arr, 0, arr.length - 1, k);
+    
+    // 数组的前 k 个数此时就是最小的 k 个数，将其存入结果
+    int[] res = new int[k];
+    for (int i = 0; i < k; i++) {
+        res[i] = arr[i];
+    }
+    return res;
+}
+
+void partitionArray(int[] arr, int lo, int hi, int k) {
+    // 做一次 partition 操作
+    int m = partition(arr, lo, hi);
+    // 此时数组前 m 个数，就是最小的 m 个数
+    if (k == m) {
+        // 正好找到最小的 k(m) 个数
+        return;
+    } else if (k < m) {
+        // 最小的 k 个数一定在前 m 个数中，递归划分
+        partitionArray(arr, lo, m-1, k);
+    } else {
+        // 在右侧数组中寻找最小的 k-m 个数
+        partitionArray(arr, m+1, hi, k);
+    }
+}
+
+// partition 函数和快速排序中相同，具体可参考快速排序相关的资料
+// 代码参考 Sedgewick 的《算法4》
+int partition(int[] a, int lo, int hi) {
+    int i = lo;
+    int j = hi + 1;
+    int v = a[lo];
+    while (true) { 
+        while (a[++i] < v) {
+            if (i == hi) {
+                break;
+            }
+        }
+        while (a[--j] > v) {
+            if (j == lo) {
+                break;
+            }
+        }
+
+        if (i >= j) {
+            break;
+        }
+        swap(a, i, j);
+    }
+    swap(a, lo, j);
+
+    // a[lo .. j-1] <= a[j] <= a[j+1 .. hi]
+    return j;
+}
+
+void swap(int[] a, int i, int j) {
+    int temp = a[i];
+    a[i] = a[j];
+    a[j] = temp;
+}
+
+1.树的遍历
+（1）递归方式：
+递归模板：
+private List<Integer> resultList = new ArrayList<Integer>();
+    public List<Integer> preorder(Node root) {
+        //terminator 递归终止条件
+        if(root == null){
+            //process result 
+            return resultList;
+        }
+        //process current logic 处理当前层逻辑
+        resultList.add(root.val);
+        //drill down 下探到下一层
+        for(Node child:root.children){
+            preorder(child);
+        }
+        return resultList;   
+        //restore current status 清理当前层
+    }
+
+
+
+（2）迭代模式
+迭代的模式是用一个实际的栈来模拟系统调用栈
+    private List<Integer> resultList = new ArrayList<Integer>();
+    private Stack<Node> stack = new Stack<>();
+    public List<Integer> preorder(Node root) {
+        //terminator 终止条件
+        if(root == null){
+            //process result
+            return resultList;
+        }
+        stack.push(root);
+        //把所有的子节点从右到左压入栈中，那取出的时候就是从左到右
+        //如果是二叉树，那就是先把右节点压入栈中，再把左节点压入栈，最后就能先取出左节点，再弹出右节点
+        while(!stack.isEmpty()){
+            Node node = stack.pop();
+            resultList.add(node.val);
+            for(int i = node.children.size()-1;i>=0;i--){
+                stack.add(node.children.get(i));
+            }
+        }
+        return resultList;
+}
+
+
+2.异位词判断
+（1） 异位词排序之后是一样的字符串，利用这个特性
+  public List<List<String>> groupAnagrams(String[] strs) {
+        //特殊条件判断
+        if (strs.length == 0) return new ArrayList();
+        //存放异位词：key为相同的异位词，value为list的异位词
+        Map<String, List> ans = new HashMap<String, List>();
+        for (String s : strs) {
+            char[] ca = s.toCharArray();
+            //排序
+            Arrays.sort(ca);
+            String key = String.valueOf(ca);
+            //如果没有就新建key，有就加入到后面的List中
+            if (!ans.containsKey(key)) ans.put(key, new ArrayList());
+            ans.get(key).add(s);
+        }
+        return new ArrayList(ans.values());
+    }
+
+（2）计数法
+3.最近公共祖先
+最主要是判断向下递归时候，终止条件有两种，一种是null（找到根节点也没找到）一种是刚好找到有p或者是q，任意一个都可以，无论是p还是q，因为p、q在同一个子树，所以返回的就是公共的祖先。
+
+
+
+4.回溯算法
+ 	回溯理解：“回溯”指的是“状态重置”，可以理解为“回到过去”、“恢复现场”，是在编码的过程中，是为了节约空间而使用的一种技巧。而回溯其实是“深度优先遍历”特有的一种现象。
+（1）全排列
+第一种方法：用一个数组保存状态，是否遍历过，如果遍历过就置为true。
+
+
+
+第一种方法主要问题是：会创建很多的中间变量、所以有空间上的浪费。下面是优化的方式。
+
+
+
+
+1.DFS模板
+（1）递归写法：
+Set visited = new HashSet<Node>();
+void dfs(node, visited): 
+if node in visited: # terminator 
+# already visited 
+return 
+ visited.add(node) 
+# process current node here. 
+...
+for next_node in node.children(): 
+ if not next_node in visited: 
+ dfs(next_node, visited)
+（2）非递归写法：
+def DFS(self, tree): 
+if tree.root is None: 
+ 	return [] 
+ 	visited, stack = [], [tree.root] 
+while stack: 
+ 	node = stack.pop() 
+ 	visited.add(node) 
+ 	process (node) 
+ 	nodes = generate_related_nodes(node) 
+ 	stack.push(nodes) 
+2.BFS模板
+
+
+def BFS(graph, start, end): 
+ 	queue = [] 
+ 	queue.append([start]) 
+ 	visited.add(start) 
+while queue: 
+ 		node = queue.pop() 
+ 		visited.add(node) 
+ 		process(node) 
+ 		nodes = generate_related_nodes(node) 
+ 		queue.push(nodes) 
+# other processing work 
+
+
+
+3.二分查找
+   （1）条件：
+a.目标函数单调性（单调递增或者递减）
+b.存在上下界（bounded）
+c.能够通过索引访问（index accessible)
+
+2.二分法代码模板：
+left, right = 0, len(array) - 1 
+while left <= right: 
+  mid = (left + right) / 2 
+  if array[mid] == target: 
+  	# find the target!! 
+  	Break or return result 
+  elif array[mid] < target: 
+ 	 left = mid + 1 
+  else: 
+  	right = mid -
