@@ -1,0 +1,33 @@
+3.二分查找
+   （1）条件：
+a.目标函数单调性（单调递增或者递减）
+b.存在上下界（bounded）
+c.能够通过索引访问（index accessible)
+
+2.二分法代码模板：
+
+  #######python模板##########
+left, right = 0, len(array) - 1 
+while left <= right: 
+  mid = (left + right) / 2 
+  if array[mid] == target: 
+  	# find the target!! 
+  	Break or return result 
+  elif array[mid] < target: 
+ 	 left = mid + 1 
+  else: 
+  	right = mid -1
+
+  #######java模板##########
+int left = 0;
+int right = arrray.length - 1;
+while(left<=right){
+int mid =  (left + right) / 2;
+If(array[mid] == target) {
+Break or return result;
+}else if(array[mid] < target){
+Left = mid + 1;
+}else{
+right = mid -1;
+}
+}
